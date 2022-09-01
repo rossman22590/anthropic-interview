@@ -1,45 +1,48 @@
-import { Input, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import { useTextGeneratorHandlers } from "./TextGeneratorHandlers";
 import { observer } from "mobx-react";
-import { useEffect, useState } from "react";
 import { useStores } from "stores/StoreContext";
+import { useEffect, useRef } from "react";
 
-interface ComposerProps {}
-export const Composer: React.FC<ComposerProps> = observer(() => {
+export const Composer: React.FC = observer(() => {
   const { resetComposer } = useTextGeneratorHandlers();
-  const [showResult, setShowResult] = useState(false);
   const { aiTextGenStore } = useStores();
+  const composerRef = useRef<HTMLElement>(null);
   const aiText = aiTextGenStore.aiText;
   const userText = aiTextGenStore.userText;
-  useEffect(() => {
-    if (aiText.length) {
-      setShowResult(true);
-    }
-  }, [aiText]);
-
   const onClickResult = () => {
-    setShowResult(false);
     resetComposer();
   };
+  useEffect(() => {
+    composerRef?.current?.focus();
+  }, [aiText]);
   return (
     <Box flex="1" display="flex">
-      {(!showResult && (
+      {(!aiText.length && (
         <Box
           id="composerEditor"
           border="1px solid blue"
           flex="1"
           margin="10px"
-          contentEditable
+          ref={composerRef}
+          contentEditable={!aiText.length}
+          dangerouslySetInnerHTML={{
+            __html: userText,
+          }}
         />
       )) || (
-        <Box onClick={onClickResult}>
-          <span>
-            {userText}
-            <span style={{ background: "lightgreen" }}>{aiText}</span>
-          </span>
-        </Box>
+        <Box
+          border="1px solid blue"
+          flex="1"
+          margin="10px"
+          onClick={onClickResult}
+          dangerouslySetInnerHTML={{
+            __html:
+              userText +
+              `<span style= 'background:lightgreen'>${aiText}</span>`,
+          }}
+        />
       )}
-      {/* <Input value={text} onChange={(e) => editText(e.target.value)} /> */}
     </Box>
   );
 });

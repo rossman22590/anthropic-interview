@@ -1,11 +1,9 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { useStores } from "stores/StoreContext";
 import { Composer } from "./Composer";
 import { Controls } from "./Controls";
 import { observer } from "mobx-react";
 export const AITextGeneratorContainer: React.FC = observer(() => {
-  const { aiTextGenStore } = useStores();
-  const smallScreen = useMediaQuery("(maxWidth:400px)");
+  const smallScreen = useMediaQuery("(max-width:400px)");
   return (
     <Box
       display="flex"
@@ -14,12 +12,16 @@ export const AITextGeneratorContainer: React.FC = observer(() => {
       height="100%"
       flexDirection="column"
     >
-      <Box>AI Text Generator</Box>
-      <Box display="flex" flexDirection={smallScreen ? "column" : "row"}>
+      <Box padding="18px">AI Text Generator</Box>
+      <Box
+        display="flex"
+        flexDirection={smallScreen ? "column" : "row"}
+        gap="20px"
+      >
         <Box
           display="flex"
           justifyContent="center"
-          alignItems="center"
+          alignItems="start"
           flex="1"
           height="100%"
         >
@@ -31,7 +33,8 @@ export const AITextGeneratorContainer: React.FC = observer(() => {
           alignItems="center"
           flex="2"
           height="100%"
-          borderLeft="1px solid gray"
+          borderLeft={!smallScreen ? "1px solid gray" : ""}
+          borderTop={smallScreen ? "1px solid gray" : ""}
         >
           <Composer />
         </Box>

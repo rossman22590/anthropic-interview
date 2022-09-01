@@ -6,5 +6,4 @@ export class MobXStore {
   ): void => {
     this[observable] = newValue;
   };
-  constructor() {}
 }
